@@ -1,0 +1,27 @@
+{
+  "name": "ltc4162",
+  "version": "1.0.0",
+  "description": "ltc4162 battery controller",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Angel Merino",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/voxel-dot-at/ltc4162-node.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/voxel-dot-at/ltc4162-node/issues"
+  },
+  "homepage": "https://github.com/voxel-dot-at/ltc4162-node",
+  "devDependencies": {
+    "standard": "^12.0.1"
+  },
+  "dependencies": {
+    "bitwise": "^2.0.3",
+    "i2c-bus": "^4.0.9"
+  }
+}
