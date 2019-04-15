@@ -9,4 +9,5 @@ Deeply inspirated in the c implemented package: https://github.com/Xenomorphxx12
 
 # Usage
 index.js contains an example that read the principal register.
+
 node index.js
