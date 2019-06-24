@@ -2,7 +2,7 @@
   "name": "ltc4162",
   "version": "1.0.0",
   "description": "ltc4162 battery controller",
-  "main": "index.js",
+  "main": "ltc4162.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
