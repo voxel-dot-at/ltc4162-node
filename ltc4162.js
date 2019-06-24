@@ -12,7 +12,7 @@ class LTC4162 {
 
 
     this.RSNSI = 0.100
-    this.RSNSB = 0.010
+    this.RSNSB = 0.100
     this.RNTCBIAS = 10000.0
     this.RNTCSER = 0.0
     this.VINDIV = 30.0
@@ -22,28 +22,28 @@ class LTC4162 {
     this.AVCLPROG = 37.5
     this.ADCGAIN = 18191.0
     this.VREF = 1.2
-    this.LRm40 = 214063.67
-    this.LRm34 = 152840.30
-    this.LRm28 = 110480.73
-    this.LRm21 = 76798.02
-    this.LRm14 = 54214.99
-    this.LRm6 = 37075.65
-    this.LR4 = 23649.71
-    this.LR33 = 7400.97
-    this.LR44 = 5001.22
-    this.LR53 = 3693.55
-    this.LR62 = 2768.21
-    this.LR70 = 2167.17
-    this.LR78 = 1714.08
-    this.LR86 = 1368.87
-    this.LR94 = 1103.18
-    this.LR102 = 896.73
-    this.LR110 = 734.86
-    this.LR118 = 606.86
-    this.LR126 = 504.80
-    this.LR134 = 422.81
-    this.LR142 = 356.45
-    this.LR150 = 302.36
+    this.Rm40 = 214063.67
+    this.Rm34 = 152840.30
+    this.Rm28 = 110480.73
+    this.Rm21 = 76798.02
+    this.Rm14 = 54214.99
+    this.Rm6 = 37075.65
+    this.R4 = 23649.71
+    this.R33 = 7400.97
+    this.R44 = 5001.22
+    this.R53 = 3693.55
+    this.R62 = 2768.21
+    this.R70 = 2167.17
+    this.R78 = 1714.08
+    this.R86 = 1368.87
+    this.R94 = 1103.18
+    this.R102 = 896.73
+    this.R110 = 734.86
+    this.R118 = 606.86
+    this.R126 = 504.80
+    this.R134 = 422.81
+    this.R142 = 356.45
+    this.R150 = 302.36
 
     this.I2C_LADDR_68   = 0x68
 
@@ -568,24 +568,23 @@ class LTC4162 {
   init() {
     return new Promise((resolve, reject) => {
       
-      this.readSystemStatus()
+      // this.readSystemStatus()
       return resolve(1)
 
     });
   }
 
   readSystemStatus() {
-    
-    const data = this.i2cBus.readByteSync(this.i2cAddress, this.SYSTEM_STATUS_REG)
-    const bits = bitwise.byte.read(data)
-    console.log(bitwise.bits.toString(bits, 4))
-    if (bits[7]) {
+    let data = Buffer.alloc(2)
+    this.i2cBus.readI2cBlockSync(this.i2cAddress, this.SYSTEM_STATUS_REG,2,data)
+    let bits = bitwise.buffer.read(data)
+    if (bits[8]) {
       console.log('Battery charger ON')
     } else {
       console.log('Battery charger ON')
     }
 
-    if (bits[6]) {
+    if (bits[7]) {
       console.log('Cell count ERROR')
     } else {
       console.log('Cell count OK')
@@ -626,7 +625,6 @@ class LTC4162 {
     } else {
       console.log('INTVCC pin voltage is lower than the telemetry system lockout level')
     }
-
 
   }
 
