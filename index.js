@@ -9,238 +9,237 @@ const options = {
 
 const ltc4162 = new LTC4162(options)
 
-ltc4162.init().then(() => {
-  console.log('LTC4162 initialization succeeded');
-  let data = Buffer.alloc(2)
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.SYSTEM_STATUS_REG,2,data)
-  let bits = bitwise.buffer.read(data)
-  console.log('SYSTEM_STATUS_REG: ' + bits)
-  if (bits[15]) {
-    console.log('Battery charger ON')
-  } else {
-    console.log('Battery charger OFF')
-  }
 
-  if (bits[0]) {
-    console.log('Cell count ERROR')
-  } else {
-    console.log('Cell count OK')
-  }
+console.log('LTC4162 initialization succeeded');
+let data = Buffer.alloc(2)
 
-  if (bits[2]) {
-    console.log('Frequency Resistor not detected')
-  } else {
-    console.log('Frequency Resistor detected')
-  }
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.SYSTEM_STATUS_REG,2,data)
+let bits = bitwise.buffer.read(data)
+console.log('SYSTEM_STATUS_REG: ' + bits)
+if (bits[15]) {
+  console.log('Battery charger ON')
+} else {
+  console.log('Battery charger OFF')
+}
 
-  if (bits[3]) {
-    console.log('Thermal Shutdown ON')
-  } else {
-    console.log('Thermal Shutdown OFF')
-  }
+if (bits[0]) {
+  console.log('Cell count ERROR')
+} else {
+  console.log('Cell count OK')
+}
 
-  if (bits[4]) {
-    console.log('Voltage Shutdown Protection ON')
-  } else {
-    console.log('Voltage Shutdown Protection OFF')
-  }
+if (bits[2]) {
+  console.log('Frequency Resistor not detected')
+} else {
+  console.log('Frequency Resistor detected')
+}
 
-  if (bits[5]) {
-    console.log('Input voltage high enough for charging')
-  } else {
-    console.log('Input voltage too low for changing')
-  }
+if (bits[3]) {
+  console.log('Thermal Shutdown ON')
+} else {
+  console.log('Thermal Shutdown OFF')
+}
 
-  if (bits[6]) {
-    console.log('Input voltage higher than then switching regulator undervoltage lockout level')
-  } else {
-    console.log('Input voltage lower than then switching regulator undervoltage lockout level')
-  }
+if (bits[4]) {
+  console.log('Voltage Shutdown Protection ON')
+} else {
+  console.log('Voltage Shutdown Protection OFF')
+}
 
-  if (bits[7]) {
-    console.log('INTVCC pin voltage is higher than the telemetry system lockout level')
-  } else {
-    console.log('INTVCC pin voltage is lower than the telemetry system lockout level')
-  }
+if (bits[5]) {
+  console.log('Input voltage high enough for charging')
+} else {
+  console.log('Input voltage too low for changing')
+}
 
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.CHEM_CELLS_REG,2,data)
+if (bits[6]) {
+  console.log('Input voltage higher than then switching regulator undervoltage lockout level')
+} else {
+  console.log('Input voltage lower than then switching regulator undervoltage lockout level')
+}
 
-  console.log('CHEM_CELLS_REG: ' + bitwise.buffer.read(data))
-  let cells = bitwise.buffer.readUInt(data, 4, 4)
-  console.log('pre cells: ' + cells)
-  if (cells === 0) {
-    cells = 4
-    console.log('cells preset value: ' + cells)
-  } else {
-    console.log('cells: ' + cells)
-  }
-  let chem = bitwise.buffer.readUInt(data, 12, 4)
-  if (chem === 0) {
-    chem = 9
-    console.log('chem preset value: ' + chem)
-  } else {
-    console.log('chem: ' + chem)
-  }
+if (bits[7]) {
+  console.log('INTVCC pin voltage is higher than the telemetry system lockout level')
+} else {
+  console.log('INTVCC pin voltage is lower than the telemetry system lockout level')
+}
+
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.CHEM_CELLS_REG,2,data)
+
+console.log('CHEM_CELLS_REG: ' + bitwise.buffer.read(data))
+let cells = bitwise.buffer.readUInt(data, 4, 4)
+console.log('pre cells: ' + cells)
+if (cells === 0) {
+  cells = 4
+  console.log('cells preset value: ' + cells)
+} else {
+  console.log('cells: ' + cells)
+}
+let chem = bitwise.buffer.readUInt(data, 12, 4)
+if (chem === 0) {
+  chem = 9
+  console.log('chem preset value: ' + chem)
+} else {
+  console.log('chem: ' + chem)
+}
 
 
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.CHARGER_STATE_REG,2,data)
-  console.log('CHARGER_STATE_REG: ' + bitwise.buffer.read(data,0,12))
-  console.log('CHARGER_STATE_REG: ' + data.readUInt16LE())
-  console.log('CHARGER_STATE_REG: ' + bitwise.buffer.readUInt(data))
-  switch(data.readUInt16LE()) {
-    case 1:
-      console.log('Shorted Battery')
-    break
-    case 2:
-      console.log('Open Battery')
-    break
-    case 64:
-      console.log('Float')
-    break
-    case 256:
-      console.log('Suspended')
-    break
-    case 512:
-      console.log('Absorb')
-    break
-    case 1024:
-      console.log('Equalize')
-    break
-    case 512:
-      console.log('Thermal Regulation')
-    break
-    case 1024:
-      console.log('Bat Detection')
-    break
-    case 2048:
-      console.log('Thermal Regulation')
-    break
-    case 4096:
-      console.log('Bat Detect Failed')
-    break
-    default:
-      console.log('None')
-    break
-  }
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.CHARGER_STATE_REG,2,data)
+console.log('CHARGER_STATE_REG: ' + bitwise.buffer.read(data,0,12))
+console.log('CHARGER_STATE_REG: ' + data.readUInt16LE())
+console.log('CHARGER_STATE_REG: ' + bitwise.buffer.readUInt(data))
+switch(data.readUInt16LE()) {
+  case 1:
+    console.log('Shorted Battery')
+  break
+  case 2:
+    console.log('Open Battery')
+  break
+  case 64:
+    console.log('Float')
+  break
+  case 256:
+    console.log('Suspended')
+  break
+  case 512:
+    console.log('Absorb')
+  break
+  case 1024:
+    console.log('Equalize')
+  break
+  case 512:
+    console.log('Thermal Regulation')
+  break
+  case 1024:
+    console.log('Bat Detection')
+  break
+  case 2048:
+    console.log('Thermal Regulation')
+  break
+  case 4096:
+    console.log('Bat Detect Failed')
+  break
+  default:
+    console.log('None')
+  break
+}
 
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.CHARGE_STATUS_REG,2,data)
-  console.log('CHARGE_STATUS_REG: ' + bitwise.buffer.read(data))
-  switch(data.readUInt16LE()) {
-    case 0:
-      console.log('Charger Off')
-    break
-    case 1:
-      console.log('Constant Voltage')
-    break
-    case 2:
-      console.log('Constant Current')
-    break
-    case 4:
-      console.log('Input Current')
-    break
-    case 8:
-      console.log('Input Voltage')
-    break
-    case 16:
-      console.log('Thermal Regulation')
-    break
-    case 32:
-      console.log('Dropout')
-    break
-    default:
-      console.log('None')
-    break
-  }
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.CHARGE_STATUS_REG,2,data)
+console.log('CHARGE_STATUS_REG: ' + bitwise.buffer.read(data))
+switch(data.readUInt16LE()) {
+  case 0:
+    console.log('Charger Off')
+  break
+  case 1:
+    console.log('Constant Voltage')
+  break
+  case 2:
+    console.log('Constant Current')
+  break
+  case 4:
+    console.log('Input Current')
+  break
+  case 8:
+    console.log('Input Voltage')
+  break
+  case 16:
+    console.log('Thermal Regulation')
+  break
+  case 32:
+    console.log('Dropout')
+  break
+  default:
+    console.log('None')
+  break
+}
 
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.CONFIG_BITS_REG,2,data)
-  bits = bitwise.buffer.read(data)
-  console.log('CONFIG_BITS_REG:' + bits)
-  console.log('equalize_req:' + bits[7])
-  console.log('mppt_en:' + bits[6])
-  console.log('force_telemetry_on:' + bits[5])
-  console.log('telemetry_speed:' + bits[4])
-  console.log('run_bsr:' + bits[3])
-  console.log('suspend_charger:' + bits[2])
-  bits[5] = 0
-  bits[4] = 0
-  bits[2] = 0
-  data = bitwise.buffer.create(bits)
-  ltc4162.i2cBus.writeI2cBlockSync(ltc4162.i2cAddress, ltc4162.CONFIG_BITS_REG,2,data)
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.CONFIG_BITS_REG,2,data)
+bits = bitwise.buffer.read(data)
+console.log('CONFIG_BITS_REG:' + bits)
+console.log('equalize_req:' + bits[7])
+console.log('mppt_en:' + bits[6])
+console.log('force_telemetry_on:' + bits[5])
+console.log('telemetry_speed:' + bits[4])
+console.log('run_bsr:' + bits[3])
+console.log('suspend_charger:' + bits[2])
+bits[5] = 0
+bits[4] = 0
+bits[2] = 0
+data = bitwise.buffer.create(bits)
+ltc4162.i2cBus.writeI2cBlockSync(ltc4162.i2cAddress, ltc4162.CONFIG_BITS_REG,2,data)
 
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.TELEMETRY_STATUS_REG,2,data)
-  console.log('TELEMETRY_STATUS_REG:' + bitwise.buffer.read(data))
-  bits = bitwise.buffer.read(data)
-  console.log('telemetry_valid:' + bits[7])
-  console.log('bsr_questionable:' + bits[6])
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.TELEMETRY_STATUS_REG,2,data)
+console.log('TELEMETRY_STATUS_REG:' + bitwise.buffer.read(data))
+bits = bitwise.buffer.read(data)
+console.log('telemetry_valid:' + bits[7])
+console.log('bsr_questionable:' + bits[6])
 
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.BSR_REG,2,data)
-  console.log('data.readInt16LE(): ' + data.readInt16LE())
-  let bsr = cells * data.readInt16LE() * ltc4162.RSNSB / 250
-  console.log('bsr: ' + bsr)
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.BSR_REG,2,data)
+console.log('data.readInt16LE(): ' + data.readInt16LE())
+let bsr = cells * data.readInt16LE() * ltc4162.RSNSB / 250
+console.log('bsr: ' + bsr)
 
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.VBAT_REG,2,data)
-  let vbat = ltc4162.ltc4162_rline(0,1,0,(ltc4162.BATDIV/ltc4162.ADCGAIN*2),data.readInt16LE())*cells/2
-  console.log('vbat: ' + vbat)
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.VBAT_REG,2,data)
+let vbat = ltc4162.ltc4162_rline(0,1,0,(ltc4162.BATDIV/ltc4162.ADCGAIN*2),data.readInt16LE())*cells/2
+console.log('vbat: ' + vbat)
 
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.VIN_REG,2,data)
-  let vin = ltc4162.ltc4162_rline(0,1,0,(ltc4162.VINDIV/ltc4162.ADCGAIN),data.readUInt16LE())
-  console.log('vin: ' + vin)
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.VIN_REG,2,data)
+let vin = ltc4162.ltc4162_rline(0,1,0,(ltc4162.VINDIV/ltc4162.ADCGAIN),data.readUInt16LE())
+console.log('vin: ' + vin)
 
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.IBAT_REG,2,data)
-  console.log('IBAT_REG:' + bitwise.buffer.read(data))
-  let ibat = ltc4162.ltc4162_rline(0,1,0,(1 / ltc4162.RSNSB / ltc4162.AVPROG / ltc4162.ADCGAIN),data.readInt16LE())
-  console.log('ibat: ' + ibat)
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.IBAT_REG,2,data)
+let ibat = ltc4162.ltc4162_rline(0,1,0,(1 / ltc4162.RSNSB / ltc4162.AVPROG / ltc4162.ADCGAIN),data.readInt16LE())
+console.log('ibat: ' + ibat)
 
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.IIN_REG,2,data)
-  let iin = ltc4162.ltc4162_rline(0,1,0,(1 / ltc4162.RSNSI / ltc4162.AVCLPROG / ltc4162.ADCGAIN),data.readUInt16LE())
-  console.log('iin: ' + iin)
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.IIN_REG,2,data)
+let iin = ltc4162.ltc4162_rline(0,1,0,(1 / ltc4162.RSNSI / ltc4162.AVCLPROG / ltc4162.ADCGAIN),data.readInt16LE())
+console.log('iin: ' + iin)
 
-  // No thermistor - NTC and NTCBIAS to GND????
-  /*ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.THERMISTOR_VOLTAGE_REG,2,data)
-  let vtherm = data.readInt16LE()
-  console.log('vtherm: ' + vtherm)
-  console.log('vtherm: ' + ltc4162.RNTCBIAS * vtherm / (21829 - vtherm))
-  
-  LTC4162_NTCS0402E3103FLT_I2R(vtherm)*/
+// No thermistor - NTC and NTCBIAS to GND????
+/*ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.THERMISTOR_VOLTAGE_REG,2,data)
+let vtherm = data.readInt16LE()
+console.log('vtherm: ' + vtherm)
+console.log('vtherm: ' + ltc4162.RNTCBIAS * vtherm / (21829 - vtherm))
 
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.VOUT_REG,2,data)
-  let vout = ltc4162.ltc4162_rline(0,1,0,(ltc4162.VOUTDIV/ltc4162.ADCGAIN),data.readUInt16LE())
-  console.log('vout: ' + vout)
+LTC4162_NTCS0402E3103FLT_I2R(vtherm)*/
 
-  ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.DIE_TEMP_REG,2,data)
-  let die_temp = ltc4162.ltc4162_rline(0,1,-264.4,(-264.4 + 1 / 46.557),data.readUInt16LE())
-  console.log('die_temp: ' + die_temp)
-}).catch((err) => console.error(`LTC4162 initialization failed: ${err} `));
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.VOUT_REG,2,data)
+let vout = ltc4162.ltc4162_rline(0,1,0,(ltc4162.VOUTDIV/ltc4162.ADCGAIN),data.readUInt16LE())
+console.log('vout: ' + vout)
+
+ltc4162.i2cBus.readI2cBlockSync(ltc4162.i2cAddress, ltc4162.DIE_TEMP_REG,2,data)
+let die_temp = ltc4162.ltc4162_rline(0,1,-264.4,(-264.4 + 1 / 46.557),data.readUInt16LE())
+console.log('die_temp: ' + die_temp)
 
 function LTC4162_NTCS0402E3103FLT_I2R(vtherm) {
-  console.log('ltc4162.LTC4162_R150: ' + ltc4162.R150)
-  console.log('ltc4162.LTC4162_RNTCSER: ' + ltc4162.RNTCSER)
-  console.log('ltc4162.LTC4162_RNTCBIAS: ' + ltc4162.RNTCBIAS)
-  console.log('ltc4162.LTC4162_VREF: ' + ltc4162.VREF)
+console.log('ltc4162.LTC4162_R150: ' + ltc4162.R150)
+console.log('ltc4162.LTC4162_RNTCSER: ' + ltc4162.RNTCSER)
+console.log('ltc4162.LTC4162_RNTCBIAS: ' + ltc4162.RNTCBIAS)
+console.log('ltc4162.LTC4162_VREF: ' + ltc4162.VREF)
 
-  let val150 = (ltc4162.R150+ltc4162.RNTCSER)/ (ltc4162.R150 + ltc4162.RNTCSER + ltc4162.RNTCBIAS) * ltc4162.ADCGAIN * ltc4162.VREF
-  console.log ('val150: ' + val150)
+let val150 = (ltc4162.R150+ltc4162.RNTCSER)/ (ltc4162.R150 + ltc4162.RNTCSER + ltc4162.RNTCBIAS) * ltc4162.ADCGAIN * ltc4162.VREF
+console.log ('val150: ' + val150)
 
-  let val142 = (ltc4162.R142+ltc4162.RNTCSER)/ (ltc4162.R142 + ltc4162.RNTCSER + ltc4162.RNTCBIAS) * ltc4162.ADCGAIN * ltc4162.VREF
-  console.log ('val142: ' + val142)
-  
-  let val126= (ltc4162.R126+ltc4162.RNTCSER)/ (ltc4162.R126 + ltc4162.LRNTCSER + ltc4162.RNTCBIAS) * ltc4162.ADCGAIN * ltc4162.VREF
-  console.log ('val126: ' + val126)
+let val142 = (ltc4162.R142+ltc4162.RNTCSER)/ (ltc4162.R142 + ltc4162.RNTCSER + ltc4162.RNTCBIAS) * ltc4162.ADCGAIN * ltc4162.VREF
+console.log ('val142: ' + val142)
 
-  let val118 = (ltc4162.R118+ltc4162.RNTCSER)/ (ltc4162.R118 + ltc4162.LRNTCSER + ltc4162.RNTCBIAS) * ltc4162.ADCGAIN * ltc4162.VREF
-  console.log ('val118: ' + val118)
+let val126= (ltc4162.R126+ltc4162.RNTCSER)/ (ltc4162.R126 + ltc4162.LRNTCSER + ltc4162.RNTCBIAS) * ltc4162.ADCGAIN * ltc4162.VREF
+console.log ('val126: ' + val126)
 
-  let val102 = (ltc4162.R102+ltc4162.RNTCSER)/ (ltc4162.R102 + ltc4162.LRNTCSER + ltc4162.RNTCBIAS) * ltc4162.ADCGAIN * ltc4162.VREF
-  console.log ('val102: ' + val102)
+let val118 = (ltc4162.R118+ltc4162.RNTCSER)/ (ltc4162.R118 + ltc4162.LRNTCSER + ltc4162.RNTCBIAS) * ltc4162.ADCGAIN * ltc4162.VREF
+console.log ('val118: ' + val118)
 
-  let val94 = (ltc4162.R94+ltc4162.RNTCSER)/ (ltc4162.R94 + ltc4162.LRNTCSER + ltc4162.RNTCBIAS) * ltc4162.ADCGAIN * ltc4162.VREF
-  console.log ('val94: ' + val94)
+let val102 = (ltc4162.R102+ltc4162.RNTCSER)/ (ltc4162.R102 + ltc4162.LRNTCSER + ltc4162.RNTCBIAS) * ltc4162.ADCGAIN * ltc4162.VREF
+console.log ('val102: ' + val102)
 
-  if (val150 < vtherm || val142 < vtherm){
-    let line = ltc4162.ltc4162_rline(val150,val142,150,142,vtherm)
-    console.log('line: ' + line)
-    return
-  }
+let val94 = (ltc4162.R94+ltc4162.RNTCSER)/ (ltc4162.R94 + ltc4162.LRNTCSER + ltc4162.RNTCBIAS) * ltc4162.ADCGAIN * ltc4162.VREF
+console.log ('val94: ' + val94)
+
+if (val150 < vtherm || val142 < vtherm){
+  let line = ltc4162.ltc4162_rline(val150,val142,150,142,vtherm)
+  console.log('line: ' + line)
+  return
+}
 
   //if (val134 < y && )
 

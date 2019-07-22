@@ -1,5 +1,4 @@
 'use strict';
-const bitwise = require('bitwise')
 
 class LTC4162 {
 
@@ -562,69 +561,6 @@ class LTC4162 {
    * |  n/a | INPUT_UNDERVOLTAGE_DAC |
    */
   this.INPUT_UNDERVOLTAGE_DAC_REG = 0x4B
-
-  }
-
-  init() {
-    return new Promise((resolve, reject) => {
-      
-      // this.readSystemStatus()
-      return resolve(1)
-
-    });
-  }
-
-  readSystemStatus() {
-    let data = Buffer.alloc(2)
-    this.i2cBus.readI2cBlockSync(this.i2cAddress, this.SYSTEM_STATUS_REG,2,data)
-    let bits = bitwise.buffer.read(data)
-    if (bits[8]) {
-      console.log('Battery charger ON')
-    } else {
-      console.log('Battery charger ON')
-    }
-
-    if (bits[7]) {
-      console.log('Cell count ERROR')
-    } else {
-      console.log('Cell count OK')
-    }
-
-    if (bits[5]) {
-      console.log('Frequency Resistor not detected')
-    } else {
-      console.log('Frequency Resistor detected')
-    }
-
-    if (bits[4]) {
-      console.log('Thermal Shutdown ON')
-    } else {
-      console.log('Thermal Shutdown OFF')
-    }
-
-    if (bits[3]) {
-      console.log('Voltage Shutdown Protection ON')
-    } else {
-      console.log('Voltage Shutdown Protection OFF')
-    }
-
-    if (bits[2]) {
-      console.log('Input voltage high enough for charging')
-    } else {
-      console.log('Input voltage too low for changing')
-    }
-
-    if (bits[1]) {
-      console.log('Input voltage higher than then switching regulator undervoltage lockout level')
-    } else {
-      console.log('Input voltage lower than then switching regulator undervoltage lockout level')
-    }
-
-    if (bits[0]) {
-      console.log('INTVCC pin voltage is higher than the telemetry system lockout level')
-    } else {
-      console.log('INTVCC pin voltage is lower than the telemetry system lockout level')
-    }
 
   }
 
