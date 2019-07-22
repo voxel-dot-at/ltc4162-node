@@ -1,5 +1,5 @@
 {
-  "name": "ltc4162",
+  "name": "ltc4162-node",
   "version": "1.0.0",
   "description": "ltc4162 battery controller",
   "main": "ltc4162.js",
